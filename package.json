@@ -1,0 +1,47 @@
+{
+  "name": "@nexra-ai/agent-cli",
+  "version": "0.4.0",
+  "description": "NeXra Agent — The AI agent for e-commerce founders. Built-in Studio (image/video/music/site/PPT) + Shop ops + Plugin marketplace. Runs on your server.",
+  "type": "module",
+  "bin": {
+    "nexra": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "sync:openapi": "tsx scripts/sync-openapi.ts",
+    "compile": "bun build --compile --minify --target=bun-darwin-arm64 src/index.ts --outfile dist/nexra-darwin-arm64"
+  },
+  "keywords": [
+    "ai-agent",
+    "ecommerce",
+    "nexra",
+    "studio",
+    "cli",
+    "shopify-alternative"
+  ],
+  "homepage": "https://nexra-ai.co",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nexra-ai/agent-cli.git"
+  },
+  "author": "NeXra <hello@nexra-ai.co>",
+  "license": "BUSL-1.1",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
+  }
+}

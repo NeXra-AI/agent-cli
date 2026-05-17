@@ -1,0 +1,35 @@
+Business Source License 1.1
+
+Parameters
+==========
+
+Licensor:             NeXra AI
+Licensed Work:        NeXra Agent CLI
+Additional Use Grant: You may use the Licensed Work in non-production
+                      environments without restriction. You may use it in
+                      production only if the production use is NOT a
+                      hosted or embedded offering of the Licensed Work
+                      (or a substantial derivative) to third parties.
+                      In other words: don't take this CLI and resell it
+                      as a competing managed agent / SaaS.
+Change Date:          2030-05-17
+Change License:       Apache License, Version 2.0
+
+For the canonical BSL 1.1 terms, see:
+https://mariadb.com/bsl11/
+
+On the Change Date (2030-05-17), the Licensed Work will be made
+available under the Change License (Apache 2.0).
+
+Notice
+======
+
+This BSL license covers the NeXra Agent CLI client (this repository)
+only. The NeXra Studio API, NeXra Shop API, NeXra Marketing API, and
+other platform services are proprietary and are NOT licensed by this
+file. See https://nexra-ai.co/terms for the terms of service that
+apply when you use those APIs.
+
+"NeXra" is a trademark of NeXra AI. Forks and derivatives must not use
+the NeXra name, logo, or branding in a way that suggests endorsement
+by or affiliation with NeXra AI.
