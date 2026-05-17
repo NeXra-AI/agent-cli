@@ -11,6 +11,7 @@ import { tunnelCmd } from "./commands/tunnel.js";
 import { pluginCmd } from "./commands/plugin.js";
 import { updateCmd } from "./commands/update.js";
 import { mcpCmd } from "./commands/mcp.js";
+import { agentsCmd } from "./commands/agents.js";
 import { VERSION, API_BASE, setCurrentProfile } from "./config.js";
 import { color, logError } from "./util/ui.js";
 
@@ -29,7 +30,8 @@ ${color.bold("COMMANDS")}
   ${color.cyan("whoami")}                            Show current tenant + quota
   ${color.cyan("profiles")} [list|use|remove]       Multi-tenant profile management
 
-  ${color.cyan("chat")} ["prompt"]                   Agent REPL (LLM + tools). Bare = interactive.
+  ${color.cyan("chat")} ["prompt"]                   Agent REPL — shared runtime w/ Telegram + Web Console
+  ${color.cyan("agents")} [list|use|allow]           Pick which agent runs your chat
   ${color.cyan("studio")} <sub> [args]               AI creative — image/video/music/site/ppt/voice
   ${color.cyan("shop")} <sub> [args]                 Shop ops — products/orders/customers
 
@@ -105,6 +107,10 @@ async function main() {
         break;
       case "chat":
         await chatCmd(rest);
+        break;
+      case "agents":
+      case "agent":
+        await agentsCmd(rest);
         break;
       case "studio":
         await studioCmd(rest);

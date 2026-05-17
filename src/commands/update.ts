@@ -1,12 +1,14 @@
-// nexra update — check GitHub releases for a newer version.
-// If found, prints the upgrade command. Doesn't auto-replace itself (v0.3
-// will add signature-verified self-replace for standalone binaries).
+// nexra update — check GitHub releases AND actually upgrade by re-running
+// `npm install -g @nexra-ai/agent-cli@latest`. For standalone binaries
+// (v0.7), this will switch to signed self-replace.
+import { spawn } from "node:child_process";
 import { VERSION, USER_AGENT } from "../config.js";
 import { color, logError, logInfo, logSuccess, logWarn } from "../util/ui.js";
 
 const RELEASES_API = "https://api.github.com/repos/nexra-ai/agent-cli/releases/latest";
 
-export async function updateCmd(_args: string[]) {
+export async function updateCmd(args: string[]) {
+  const checkOnly = args.includes("--check");
   logInfo(`Current version: ${color.cyan("v" + VERSION)}`);
   logInfo(`Checking ${color.gray(RELEASES_API)}...`);
 
@@ -49,12 +51,39 @@ export async function updateCmd(_args: string[]) {
     console.log(color.bold("Release notes:"));
     console.log(body.slice(0, 800));
     if (body.length > 800) console.log(color.gray("...truncated"));
+    console.log();
   }
+
+  if (checkOnly) {
+    console.log("To upgrade, run: " + color.cyan("nexra update"));
+    return;
+  }
+
+  // Auto-upgrade via npm
+  logInfo(`Installing ${color.cyan("@nexra-ai/agent-cli@" + latestTag)}...`);
   console.log();
-  console.log("To upgrade:");
-  console.log("  " + color.cyan(`npm install -g @nexra-ai/agent-cli@${latestTag}`));
-  console.log("  " + color.gray("# or brew upgrade nexra (when published)"));
-  console.log();
+  await new Promise<void>((resolve) => {
+    const child = spawn(
+      "npm",
+      ["install", "-g", `@nexra-ai/agent-cli@${latestTag}`],
+      { stdio: "inherit" }
+    );
+    child.on("exit", (code) => {
+      console.log();
+      if (code === 0) {
+        logSuccess(`Upgraded to v${latestTag}. Run a new \`nexra\` to use the new version.`);
+      } else {
+        logError(`npm install exited with code ${code}.`);
+        logInfo(`Try manually: ${color.cyan("npm install -g @nexra-ai/agent-cli@latest")}`);
+      }
+      resolve();
+    });
+    child.on("error", (err) => {
+      logError(`Could not start npm: ${err.message}`);
+      logInfo("Is npm in your PATH?");
+      resolve();
+    });
+  });
 }
 
 function compareVersions(a: string, b: string): number {

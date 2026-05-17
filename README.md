@@ -9,11 +9,16 @@ The first agent purpose-built to run a shop. Image / video / music / website gen
 ```bash
 npm install -g @nexra-ai/agent-cli
 nexra login
+nexra chat
 ```
 
-[Website](https://nexra-ai.co) · [Docs](https://nexra-ai.co/docs/cli) · [Pricing](https://nexra-ai.co/pricing) · [Studio](https://nexra-ai.co/studio) · [Discord](https://discord.gg/nexra)
+[English](./README.md) · [中文](./README.zh-CN.md)
+
+[Website](https://nexra-ai.co) · [Docs](https://nexra-ai.co/docs/cli) · [Pricing](https://nexra-ai.co/pricing) · [Studio](https://nexra-ai.co/studio)
 
 </div>
+
+> **v0.5** — Unified agent runtime. Your `nexra chat`, the bot on your store's Telegram channel, and the Web Agent Console at `nexra-ai.co/admin` are now **the same agent** — same memory, same persona, same skills, same knowledge base. The CLI adds fs/bash/http on top because it runs on **your** machine.
 
 ---
 
@@ -232,9 +237,9 @@ npm run dev -- whoami
 - [x] **v0.2** — `chat` agent REPL, video/music/site/ppt/voice, multi-profile, tunnel, plugin init/dev/publish, update
 - [x] **v0.3** — System tools (fs/bash/http), real billing, 22-tool server registry, web Agent Console
 - [x] **v0.4** — **MCP server** (`nexra mcp`) — works in Claude Code / Cursor / Cline / any MCP client
-- [ ] **v0.5** — Plugin sandbox runtime (signing + rlimit + permission whitelist)
-- [ ] **v0.6** — Named persistent Cloudflare tunnels (stable subdomains)
-- [ ] **v0.7** — Standalone binaries (Linux/macOS/Windows, signature-verified self-update)
+- [x] **v0.5** — **Unified agent runtime** — CLI / Telegram / Web Console share the same agent, memory, persona, knowledge. `nexra agents` to pick which agent runs your chat. `nexra update` actually upgrades.
+- [ ] **v0.6** — Plugin sandbox runtime (signing + rlimit + permission whitelist)
+- [ ] **v0.7** — Named persistent Cloudflare tunnels + standalone signed binaries
 
 ---
 

@@ -1,147 +1,124 @@
-// Minimal agent loop: LLM (Qwen via DashScope OpenAI-compatible endpoint) +
-// curated tool set. Iterates tool_calls until LLM stops calling tools.
+// v0.5 — Thin client runner.
 //
-// Default: routes through NeXra platform (/api/admin/agent/chat) so calls are
-// quota-metered. NEXRA_LLM_DIRECT=1 + DASHSCOPE_API_KEY → direct DashScope.
-
+// We no longer run an LLM loop locally. The unified agent (shared with
+// Telegram + Web Agent Console) runs server-side. CLI just:
+//   1. Sends user message to /api/admin/agent/converse
+//   2. If server replies type=text → print
+//   3. If server replies type=client_exec → execute the local tools (fs/bash/
+//      http) on user's machine, send results back, loop
+//   4. Persist session_id locally so next `nexra chat` continues memory
+//
+// This gives all 3 channels the same agent record, conversation history, persona,
+// knowledge base, and 22 SaaS tools. CLI additionally runs 4 local tools
+// (fs_read/fs_write/bash_exec/http_fetch) when the bound agent has
+// allow_client_tools=true (set via Agent Console).
 import { apiFetch, ApiError } from "../auth/client.js";
-import { toolsForLLM, runTool } from "./tools.js";
+import { runLocalTool } from "./localTools.js";
 import { color } from "../util/ui.js";
+import { getSessionId, saveSessionId, getDefaultAgentId } from "../state.js";
 
-const SYSTEM_PROMPT = `You are NeXra Agent — an AI assistant for e-commerce founders.
-
-You have access to the user's NeXra Studio (image/video/music/website/PPT/voice generation) and Shop (products / orders / customers / inventory / marketing / logistics).
-
-When the user asks you to do something, decide whether you need to call a tool. Prefer tools over guessing. Call tools in parallel when independent.
-
-Be concise. Show URLs/IDs verbatim. When you generate images or content, mention what was created and where it can be viewed.
-
-Current locale: en. Currency: RM (Malaysian Ringgit).`;
-
-type Msg = {
-  role: "system" | "user" | "assistant" | "tool";
-  content: string;
-  tool_calls?: any[];
-  tool_call_id?: string;
+type PendingToolCall = {
+  call_id: string;
+  name: string;
+  args: any;
 };
 
-export async function runAgent(userInput: string, history: Msg[] = []): Promise<Msg[]> {
-  const msgs: Msg[] = [
-    { role: "system", content: SYSTEM_PROMPT },
-    ...history,
-    { role: "user", content: userInput },
-  ];
+type ConverseResp = {
+  session_id: string;
+  agent: { id: number; name: string };
+  type: "text" | "client_exec";
+  content?: string;
+  pending_tool_calls?: PendingToolCall[];
+  iterations: number;
+};
 
-  for (let iter = 0; iter < 8; iter++) {
-    const reply = await callLLM(msgs);
-    msgs.push(reply);
+const MAX_ROUND_TRIPS = 8; // 防止意外的 server↔client tool loop 死循环
 
-    if (!reply.tool_calls || reply.tool_calls.length === 0) {
-      if (reply.content) {
-        console.log();
-        console.log(reply.content);
-      }
-      break;
-    }
+export async function runAgent(userInput: string): Promise<void> {
+  let sessionId: string | undefined = getSessionId();
+  const agentId: number | undefined = getDefaultAgentId();
 
-    // Run each tool_call — dispatched through platform (server-driven registry)
-    for (const tc of reply.tool_calls) {
-      let args: any = {};
-      try {
-        args = tc.function.arguments
-          ? typeof tc.function.arguments === "string"
-            ? JSON.parse(tc.function.arguments)
-            : tc.function.arguments
-          : {};
-      } catch {
-        args = {};
-      }
-      console.log(
-        color.gray(`  → ${tc.function.name}(${JSON.stringify(args).slice(0, 80)})`)
-      );
-      let result: any;
-      try {
-        result = await runTool(tc.function.name, args);
-      } catch (e: any) {
-        result = { error: e instanceof ApiError ? e.body : e.message };
-      }
-      const resultStr = JSON.stringify(result).slice(0, 4000);
-      msgs.push({
-        role: "tool",
-        tool_call_id: tc.id,
-        content: resultStr,
-      });
-    }
-  }
-
-  // Return history sans system prompt (caller appends new turns)
-  return msgs.filter((m) => m.role !== "system");
-}
-
-async function callLLM(msgs: Msg[]): Promise<Msg> {
-  const direct = process.env.NEXRA_LLM_DIRECT === "1";
-  if (direct) return callDashScopeDirect(msgs);
-  return callViaNexra(msgs);
-}
-
-async function callViaNexra(msgs: Msg[]): Promise<Msg> {
-  // 平台代理 — 走 /api/admin/agent/chat (复用配额、计费、provider 选择)
-  // 若该 endpoint 不存在 → fallback direct
-  try {
-    const tools = await toolsForLLM();
-    const resp = await apiFetch<any>("/api/admin/agent/chat", {
-      method: "POST",
-      body: {
-        messages: msgs,
-        tools,
-        model: process.env.NEXRA_LLM_MODEL || "qwen3-max-2026-01-23",
-      },
-    });
-    return parseLLMResp(resp);
-  } catch (e) {
-    if (e instanceof ApiError && e.status === 404) {
-      // 平台还没有 agent chat 代理 endpoint, 走直连
-      return callDashScopeDirect(msgs);
-    }
-    throw e;
-  }
-}
-
-async function callDashScopeDirect(msgs: Msg[]): Promise<Msg> {
-  const key = process.env.DASHSCOPE_API_KEY;
-  if (!key) {
-    throw new Error(
-      "DashScope key missing. Set DASHSCOPE_API_KEY, or wait for /api/admin/agent/chat platform proxy."
-    );
-  }
-  const url = "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions";
-  const tools = await toolsForLLM();
-  const r = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${key}`,
-    },
-    body: JSON.stringify({
-      model: process.env.NEXRA_LLM_MODEL || "qwen3-max-2026-01-23",
-      messages: msgs,
-      tools,
-    }),
-  });
-  if (!r.ok) {
-    const text = await r.text();
-    throw new Error(`DashScope ${r.status}: ${text.slice(0, 300)}`);
-  }
-  const data = await r.json();
-  return parseLLMResp(data);
-}
-
-function parseLLMResp(data: any): Msg {
-  const choice = data.choices?.[0] || {};
-  const m = choice.message || {};
-  return {
-    role: "assistant",
-    content: m.content || "",
-    tool_calls: m.tool_calls || [],
+  // First turn: send user message
+  let payload: any = {
+    session_id: sessionId,
+    message: userInput,
+    include_client_tools: true,
   };
+  if (agentId) payload.agent_id = agentId;
+
+  for (let i = 0; i < MAX_ROUND_TRIPS; i++) {
+    let resp: ConverseResp;
+    try {
+      resp = await apiFetch<ConverseResp>("/api/admin/agent/converse", {
+        method: "POST",
+        body: payload,
+      });
+    } catch (e: any) {
+      if (e instanceof ApiError) {
+        if (e.status === 402) {
+          console.log();
+          console.error(color.red("✗ Quota exceeded. Top up: https://nexra-ai.co/billing"));
+          return;
+        }
+        if (e.status === 401) {
+          console.error(color.red("✗ Session expired. Run: nexra login"));
+          return;
+        }
+        console.error(color.red(`✗ Server error ${e.status}: ${JSON.stringify(e.body).slice(0, 300)}`));
+        return;
+      }
+      throw e;
+    }
+
+    // Always persist latest session id (server may have created one)
+    if (resp.session_id && resp.session_id !== sessionId) {
+      sessionId = resp.session_id;
+      saveSessionId(sessionId);
+    }
+
+    if (resp.type === "text") {
+      if (resp.content) {
+        console.log();
+        console.log(resp.content);
+      }
+      return;
+    }
+
+    if (resp.type === "client_exec" && resp.pending_tool_calls?.length) {
+      // Run each locally + collect results
+      const tool_results: Array<{ call_id: string; name: string; result: any }> = [];
+      for (const tc of resp.pending_tool_calls) {
+        console.log(
+          color.gray(`  → ${tc.name}(${JSON.stringify(tc.args).slice(0, 80)})`)
+        );
+        let result: any;
+        try {
+          result = await runLocalTool(tc.name, tc.args || {});
+        } catch (e: any) {
+          result = { error: e.message || String(e) };
+        }
+        tool_results.push({ call_id: tc.call_id, name: tc.name, result });
+      }
+
+      // Next iteration: send results back, no new user message
+      payload = {
+        session_id: sessionId,
+        tool_results,
+        include_client_tools: true,
+      };
+      if (agentId) payload.agent_id = agentId;
+      continue;
+    }
+
+    // Shouldn't happen but be defensive
+    console.error(color.red(`✗ Unexpected response type: ${resp.type}`));
+    return;
+  }
+
+  console.error(color.red(`✗ Too many client_exec round-trips (${MAX_ROUND_TRIPS}). Aborting.`));
+}
+
+/** /reset clears local session (next chat starts fresh). */
+export function resetSession() {
+  saveSessionId(undefined);
 }

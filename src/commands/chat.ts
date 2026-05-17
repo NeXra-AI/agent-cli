@@ -1,12 +1,13 @@
-// nexra chat — interactive agent REPL.
+// nexra chat — interactive agent REPL (v0.5: thin client to unified runtime).
 //
-// Default: pipes through platform `/api/admin/agent/chat` (quota-metered).
-// Fallback: direct DashScope if `DASHSCOPE_API_KEY` set + NEXRA_LLM_DIRECT=1
-// (or platform returns 404 because endpoint not yet shipped).
+// Conversation persists across `nexra chat` invocations via ~/.nexra/state.json
+// (session_id). The agent itself runs server-side, shared with Telegram +
+// Web Agent Console. `/reset` starts a fresh conversation thread.
 import { createInterface } from "node:readline";
-import { runAgent } from "../agent/runner.js";
+import { runAgent, resetSession } from "../agent/runner.js";
 import { color, logError } from "../util/ui.js";
 import { getCurrent } from "../auth/tokenStore.js";
+import { getSessionId, getDefaultAgentId } from "../state.js";
 
 export async function chatCmd(args: string[]) {
   const current = getCurrent();
@@ -28,12 +29,20 @@ export async function chatCmd(args: string[]) {
   }
 
   // Interactive REPL
+  const sid = getSessionId();
+  const agentId = getDefaultAgentId();
   console.log();
   console.log(color.bold("🤖 NeXra Agent ") + color.gray(`(${current.tenant.name})`));
-  console.log(color.gray("Type your request. Ctrl+D to exit. /reset to clear history."));
+  if (sid) {
+    console.log(color.gray(`Continuing session ${sid.slice(-12)} — type /reset to start fresh.`));
+  } else {
+    console.log(color.gray("New conversation. /reset to clear. /exit to quit."));
+  }
+  if (agentId) {
+    console.log(color.gray(`Agent #${agentId} (pinned). Switch: nexra agents use <id>`));
+  }
   console.log();
 
-  let history: any[] = [];
   const rl = createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -48,8 +57,8 @@ export async function chatCmd(args: string[]) {
       return;
     }
     if (input === "/reset") {
-      history = [];
-      console.log(color.gray("(history cleared)"));
+      resetSession();
+      console.log(color.gray("(session cleared — next message starts fresh)"));
       rl.prompt();
       return;
     }
@@ -58,7 +67,7 @@ export async function chatCmd(args: string[]) {
       return;
     }
     try {
-      history = await runAgent(input, history);
+      await runAgent(input);
     } catch (e: any) {
       logError(e.message || String(e));
     }
