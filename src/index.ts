@@ -13,6 +13,7 @@ import { updateCmd } from "./commands/update.js";
 import { mcpCmd } from "./commands/mcp.js";
 import { agentsCmd } from "./commands/agents.js";
 import { channelsCmd } from "./commands/channels.js";
+import { daemonCmd } from "./commands/daemon.js";
 import { VERSION, API_BASE, setCurrentProfile } from "./config.js";
 import { color, logError } from "./util/ui.js";
 
@@ -38,6 +39,7 @@ ${color.bold("COMMANDS")}
   ${color.cyan("shop")} <sub> [args]                 Shop ops — products/orders/customers
 
   ${color.cyan("mcp")}                              Run as MCP server — plug NeXra into Claude Code, Cursor, etc.
+  ${color.cyan("daemon")} [--port 34563]            Local HTTP bridge so Web Agent Console can use fs/bash on this Mac
   ${color.cyan("tunnel")} <sub> [args]               Expose local service via Cloudflare Tunnel
   ${color.cyan("plugin")} <sub> [args]               Develop & publish marketplace plugins
   ${color.cyan("update")}                            Check for & install latest CLI version
@@ -135,6 +137,9 @@ async function main() {
         break;
       case "mcp":
         await mcpCmd(rest);
+        break;
+      case "daemon":
+        await daemonCmd(rest);
         break;
       default:
         logError(`Unknown command: ${cmd}`);

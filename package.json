@@ -1,6 +1,6 @@
 {
   "name": "@nexra-ai/agent-cli",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "NeXra Agent — The AI agent for e-commerce founders. Built-in Studio (image/video/music/site/PPT) + Shop ops + Plugin marketplace. Runs on your server.",
   "type": "module",
   "bin": {
