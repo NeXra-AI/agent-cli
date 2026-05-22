@@ -18,8 +18,10 @@
 //   3. Per-instance pairing token (random, displayed at startup)
 //   4. Origin header strict-check (browser-sent, can't be spoofed cross-site)
 import { createServer, IncomingMessage, ServerResponse } from "node:http";
+import { hostname } from "node:os";
 import { randomBytes } from "node:crypto";
 import { runLocalTool } from "../agent/localTools.js";
+import { apiFetch } from "../auth/client.js";
 import { color, logInfo, logSuccess, logWarn, symbols } from "../util/ui.js";
 import { getCurrent } from "../auth/tokenStore.js";
 import { VERSION } from "../config.js";
@@ -62,7 +64,7 @@ export async function daemonCmd(args: string[]) {
 
   const server = createServer((req, res) => handleRequest(req, res, token));
 
-  server.listen(port, "127.0.0.1", () => {
+  server.listen(port, "127.0.0.1", async () => {
     console.log();
     console.log(color.bold("🛰  NeXra daemon running"));
     console.log();
@@ -70,14 +72,24 @@ export async function daemonCmd(args: string[]) {
     console.log(`  ${symbols.bullet} Tenant: ${color.gray(`${creds.tenant.name} (${creds.tenant.slug})`)}`);
     console.log(`  ${symbols.bullet} Token:  ${color.magenta(token)}`);
     console.log();
-    console.log(color.bold("Pair with the Web Agent Console:"));
-    console.log(`  1. Open ${color.cyan("https://shop.jvogue.org/admin/agent-console#nexra")}`);
-    console.log(`  2. Click ${color.cyan("Connect daemon")} icon in the header`);
-    console.log(`  3. Paste the token above`);
+    console.log(color.bold("Two ways to use:"));
     console.log();
-    console.log(color.gray("Web will then run fs/bash/http on this machine via the daemon."));
+    console.log(color.bold("  A. Web Agent Console") + color.gray(" (浏览器 + daemon 在同一 Mac)"));
+    console.log(`     ${color.cyan("https://shop.jvogue.org/admin/agent-console#nexra")}`);
+    console.log("     → Connect daemon → paste token above");
+    console.log();
+    console.log(color.bold("  B. Telegram / 远程") + color.gray(" (daemon 主动连服务器)"));
+    console.log(`     ${color.gray("daemon 已自动 register, 你在 Telegram 跟 agent 聊就能用 fs/bash")}`);
+    console.log();
     console.log(color.gray("Ctrl+C to stop."));
     console.log();
+
+    // v0.5.4: register w/ server + start long-poll loop so Telegram/etc can use fs/bash
+    const label = `${process.env.USER || "user"}@${hostname()}`;
+    startBridge(label).catch((e) => {
+      logWarn(`Daemon bridge unavailable: ${e.message}`);
+      logInfo("Local Web Agent Console will still work (mode A).");
+    });
   });
 
   server.on("error", (err: NodeJS.ErrnoException) => {
@@ -91,11 +103,84 @@ export async function daemonCmd(args: string[]) {
     process.exit(1);
   });
 
-  process.on("SIGINT", () => {
+  process.on("SIGINT", async () => {
     console.log();
     logInfo("Stopping daemon...");
+    _bridgeStop = true;
+    try {
+      await apiFetch("/api/admin/agent/daemon/register", { method: "DELETE" });
+    } catch {}
     server.close(() => process.exit(0));
   });
+}
+
+// ============================================================================
+// Bridge to NeXra server — long-poll so Telegram bot / Web can use fs/bash
+// ============================================================================
+
+let _bridgeStop = false;
+
+async function startBridge(label: string) {
+  // 1. Register
+  try {
+    await apiFetch("/api/admin/agent/daemon/register", {
+      method: "POST",
+      body: { label },
+    });
+    process.stderr.write(color.gray(`  ✓ Registered with NeXra server (label=${label})\n`));
+  } catch (e: any) {
+    throw new Error(`register failed: ${e.message}`);
+  }
+
+  // 2. Long-poll loop
+  process.stderr.write(color.gray("  ✓ Listening for remote exec requests (Telegram/Web)...\n\n"));
+  while (!_bridgeStop) {
+    try {
+      const resp = await apiFetch<any>("/api/admin/agent/daemon/poll", {
+        method: "POST",
+        body: {},
+      });
+      if (resp?.call) {
+        // Got work — run it in background, immediately poll for next
+        handleBridgeCall(resp.call).catch((e) => {
+          process.stderr.write(color.red(`  ✗ exec failed: ${e.message}\n`));
+        });
+      }
+      // (idle: true → loop continues immediately)
+    } catch (e: any) {
+      // Network blip or server restart — wait + retry
+      process.stderr.write(color.gray(`  ⚠ bridge poll: ${e.message?.slice(0, 80)} — retry 5s\n`));
+      await sleep(5000);
+      // Try re-register periodically (server may have lost state)
+      try {
+        await apiFetch("/api/admin/agent/daemon/register", {
+          method: "POST",
+          body: { label },
+        });
+      } catch {}
+    }
+  }
+}
+
+async function handleBridgeCall(call: { request_id: string; name: string; args: any }) {
+  process.stderr.write(
+    color.gray(`  → [remote] ${call.name}(${JSON.stringify(call.args).slice(0, 60)})\n`)
+  );
+  let result: any;
+  let error: string | undefined;
+  try {
+    result = await runLocalTool(call.name, call.args || {});
+  } catch (e: any) {
+    error = e.message || String(e);
+  }
+  await apiFetch("/api/admin/agent/daemon/result", {
+    method: "POST",
+    body: { request_id: call.request_id, result, error },
+  });
+}
+
+function sleep(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
 }
 
 function setCorsHeaders(req: IncomingMessage, res: ServerResponse) {
