@@ -5,32 +5,29 @@ import { spawn } from "node:child_process";
 import { VERSION, USER_AGENT } from "../config.js";
 import { color, logError, logInfo, logSuccess, logWarn } from "../util/ui.js";
 
-const RELEASES_API = "https://api.github.com/repos/nexra-ai/agent-cli/releases/latest";
+const NPM_REGISTRY = "https://registry.npmjs.org/@nexra-ai/agent-cli/latest";
 
 export async function updateCmd(args: string[]) {
   const checkOnly = args.includes("--check");
   logInfo(`Current version: ${color.cyan("v" + VERSION)}`);
-  logInfo(`Checking ${color.gray(RELEASES_API)}...`);
+  logInfo(`Checking npm…`);
 
   let latestTag = "";
   let body = "";
   try {
-    const r = await fetch(RELEASES_API, {
-      headers: { "User-Agent": USER_AGENT, Accept: "application/vnd.github+json" },
+    const r = await fetch(NPM_REGISTRY, {
+      headers: { "User-Agent": USER_AGENT, Accept: "application/json" },
     });
-    if (r.status === 404) {
-      logWarn("No releases published yet. You're on the bleeding edge.");
-      return;
-    }
     if (!r.ok) {
-      logError(`GitHub returned ${r.status}. Try again later.`);
+      logError(`npm registry returned ${r.status}. Try again later.`);
       return;
     }
     const data = (await r.json()) as any;
-    latestTag = (data.tag_name || "").replace(/^v/, "");
-    body = data.body || "";
+    latestTag = data.version || "";
+    // npm packages can have description but no release notes; we'll just show package metadata
+    body = (data.description || "") + (data.homepage ? `\n\n${data.homepage}` : "");
   } catch (e: any) {
-    logError(`Could not reach GitHub: ${e.message}`);
+    logError(`Could not reach npm: ${e.message}`);
     return;
   }
 
