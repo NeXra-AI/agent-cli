@@ -33,6 +33,10 @@
   },
   "author": "NeXra <hello@nexra-ai.co>",
   "license": "BUSL-1.1",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "engines": {
     "node": ">=20"
   },

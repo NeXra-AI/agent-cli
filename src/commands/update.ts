@@ -63,9 +63,15 @@ export async function updateCmd(args: string[]) {
   logInfo(`Installing ${color.cyan("@nexra-ai/agent-cli@" + latestTag)}...`);
   console.log();
   await new Promise<void>((resolve) => {
+    // 强制 official registry — 防用户配了 Taobao 镜像 (sync 延迟几小时), 装到旧版
     const child = spawn(
       "npm",
-      ["install", "-g", `@nexra-ai/agent-cli@${latestTag}`],
+      [
+        "install",
+        "-g",
+        `@nexra-ai/agent-cli@${latestTag}`,
+        "--registry=https://registry.npmjs.org/",
+      ],
       { stdio: "inherit" }
     );
     child.on("exit", (code) => {
