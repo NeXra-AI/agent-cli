@@ -71,13 +71,16 @@ export async function apiFetch<T = any>(path: string, opts: FetchOpts = {}): Pro
   }
 
   if (!resp.ok) {
-    let body: any = null;
+    // Read body ONCE as text, then try parse JSON. Reading twice (.json then .text on
+    // catch) throws 'Body is unusable' on Node fetch.
+    const errText = await resp.text();
+    let errBody: any = errText;
     try {
-      body = await resp.json();
+      errBody = JSON.parse(errText);
     } catch {
-      body = await resp.text();
+      // not JSON, keep as text
     }
-    throw new ApiError(resp.status, body);
+    throw new ApiError(resp.status, errBody);
   }
 
   // 202 pending 也算 ok，由调用方处理
