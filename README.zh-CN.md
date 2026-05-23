@@ -26,16 +26,17 @@ nexra chat
 
 别家 agent 都在卖**自己**。NeXra 卖的是**自己里面装的整间店**。
 
-| Agent | 一句话卖点 | …装完之后,你还得自己接: |
-|---|---|---|
-| **Hermes** | *会自我进化* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
-| **OpenHuman** | *最懂你* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
-| **OpenClaw** | *全能助手* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
-| **🟣 NeXra** | ***一柜子 SaaS 打包成一个 agent*** | **— 没有。`nexra login` 就够。** |
+| Agent | 一句话卖点 | 装完后,你还得自己接 | 跑在哪 |
+|---|---|---|---|
+| **Hermes** | *会自我进化* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … | 自部署 — 你要 24h 开服务器 |
+| **OpenHuman** | *最懂你* | 一柜子 | 本地 — 笔电进睡眠 agent 就死 |
+| **OpenClaw** | *全能助手* | 一柜子 | 本地 / 自部署 |
+| **Claude Code / Cursor** | *写代码很强* | 一柜子 | 本地 — 关终端就停 |
+| **🟣 NeXra** | ***一柜子 SaaS 打包成一个 agent*** | **— 没有。`nexra login` 就够。** | **我们的云。你笔电可以关机。** |
 
 ---
 
-## ✨ 真正起作用的 5 件事
+## ✨ 真正起作用的 6 件事
 
 ### 1️⃣ 50+ 原生 AI 能力 — *agent 自己干,不靠外部 API*
 
@@ -66,7 +67,22 @@ nexra chat
 
 你的 Claude Code 立刻多 22 个电商 + 创意工具 — **不然你得去 22 个平台分别注册、拿 22 个 API key、配 22 份计费、自己写 22 段集成代码**。NeXra 把这一切收成一次 OAuth。
 
-### 3️⃣ Agent 应用的"淘宝" — *你做的 skill 终于有地方卖*
+### 3️⃣ 真 24 小时运转 — *你笔电关机/睡觉/出门旅行都没事*
+
+市面上大多数"AI agent"跑在**你**的机器。终端一关 → agent 死。笔电进睡眠 → Telegram bot 没声音。自部署方案(Hermes、OpenClaw)需要**你**养一台服务器,自己付电费、自己重启、自己维护。
+
+**NeXra 跑在我们云端**。整个 agent runtime — 你的人设、记忆、Telegram bot、定时的 FB Ads / Blog Autopilot / 对账任务 — 全在我们服务器上。你睡觉、你笔电关机、你坐飞机出国。**顾客的"这个有 M 码吗"照样有人答、订单照流、广告照优化**。
+
+| | 自部署 agent (Hermes, OpenClaw) | 本地 agent (Claude Code, Cursor) | **NeXra** |
+|---|---|---|---|
+| 你要维护的服务器 | 有 — 你自己搞 | 没有 | **没有 — 我们搞** |
+| 笔电睡眠时还在跑 | 看你服务器没挂 | ✗ 死 | ✅ 一直在 |
+| 你出差时还在跑 | 看你服务器没崩 | ✗ 死 | ✅ 一直在 |
+| 闲置成本 | 电费 + 带宽 | 免费 | 免费(只按 AI 调用付费) |
+
+零硬件、零运维、零电费。
+
+### 4️⃣ Agent 应用的"淘宝" — *你做的 skill 终于有地方卖*
 
 你给 Claude Code / Hermes 写了一个酷 plugin — **谁买?** 没人。烂在自己电脑。
 
@@ -79,11 +95,11 @@ NeXra 是**第一个专门给 agent plugin 开的应用市场**:
 
 对开发者:终于有分发渠道。对店主:有审核过的零售自动化应用市场。
 
-### 4️⃣ 一脑跨端 *(基本面,但做到位)*
+### 5️⃣ 一脑跨端 *(基本面,但做到位)*
 
 CLI / Telegram / WhatsApp / 微信 / FB / 网页 / MCP 共享同一个 agent — 同一份记忆、人设、知识库、22+ 工具。很多 agent 嘴上都说,但很少真正端到端打通顾客面渠道。
 
-### 5️⃣ Cloud agent 借你 Mac 的手 *(`nexra daemon`)*
+### 6️⃣ Cloud agent 借你 Mac 的手 *(`nexra daemon`)*
 
 跑一句 `nexra daemon`,你 Telegram bot 就能通过长轮询调你笔电的 `fs_write` / `bash_exec` — *"把今天订单导到 ~/Desktop"* 它真导。*(其他 agent 技术上也能做,我们做成了一条命令 + 加固的安全模型:127.0.0.1 only、配对 token、Origin 白名单。)*
 

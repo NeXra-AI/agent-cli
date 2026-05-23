@@ -26,16 +26,17 @@ nexra chat
 
 Every agent sells *itself*. NeXra sells *the whole shop inside itself*.
 
-| Agent | One-liner pitch | …so after you install it, you still need to wire up: |
-|---|---|---|
-| **Hermes** | *Self-evolving agent* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
-| **OpenHuman** | *The agent that knows you best* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
-| **OpenClaw** | *General-purpose assistant* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
-| **🟣 NeXra** | ***A whole closet of SaaS, packed into one agent*** | **— nothing. Just `nexra login`.** |
+| Agent | One-liner pitch | After install, what you still wire up | Runs where |
+|---|---|---|---|
+| **Hermes** | *Self-evolving agent* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … | Self-hosted — you keep a box running 24/7 |
+| **OpenHuman** | *The agent that knows you best* | Same stack | Local — laptop sleeps, agent dies |
+| **OpenClaw** | *General-purpose assistant* | Same stack | Local / self-hosted |
+| **Claude Code / Cursor** | *Great coding agent* | Same stack | Local — close terminal, it stops |
+| **🟣 NeXra** | ***A whole closet of SaaS, packed into one agent*** | **— nothing. Just `nexra login`.** | **Our cloud. Your laptop can be off.** |
 
 ---
 
-## ✨ The 5 things that actually matter
+## ✨ The 6 things that actually matter
 
 ### 1️⃣ 50+ native AI capabilities — *the agent does it itself, not by calling an API*
 
@@ -66,7 +67,22 @@ Already in Claude Code? Add **one line** of MCP config:
 
 Now your Claude Code has 22 e-commerce + creative tools — **the alternative is signing up at 22 separate platforms, getting 22 API keys, billing 22 ways, and writing the integration code yourself**. NeXra collapses all of that into one OAuth login.
 
-### 3️⃣ The Taobao for agent skills — *finally, somewhere to sell what you build*
+### 3️⃣ Truly 24/7 — *your laptop can be off, asleep, on a plane*
+
+Most "AI agents" run on **your** machine. Close the terminal → agent dies. Laptop sleeps → Telegram bot goes silent. Self-hosted alternatives like Hermes or OpenClaw mean *you* maintain a server, pay electricity, deal with reboots.
+
+**NeXra runs on our cloud.** The whole agent runtime — your persona, your memory, your Telegram bot, your scheduled FB Ads / Blog Autopilot / reconciliation jobs — lives on our servers. You sleep, your laptop is off, you're on a flight. **Customers keep getting "do you have this in size M?" answered. Orders keep flowing. Ads keep being optimized.**
+
+| | Self-hosted agents (Hermes, OpenClaw) | Local agents (Claude Code, Cursor) | **NeXra** |
+|---|---|---|---|
+| Server you maintain | Yes — your problem | None | **None — our problem** |
+| Stays up when laptop sleeps | If your server doesn't | ✗ Dies | ✅ Always |
+| Stays up when you travel | If you didn't break the server | ✗ Dies | ✅ Always |
+| Cost when idle | Power + bandwidth | Free | Free (only pay per AI call) |
+
+Zero hardware. Zero ops. Zero electricity bill.
+
+### 4️⃣ The Taobao for agent skills — *finally, somewhere to sell what you build*
 
 You wrote a clever plugin / skill for Claude Code or Hermes — **who buys it?** Nobody. It rots on your laptop.
 
@@ -79,11 +95,11 @@ NeXra is **the first marketplace built specifically for agent plugins**:
 
 For agent builders this is the missing distribution layer. For shop owners it's an app store of vetted retail automations.
 
-### 4️⃣ One brain, every channel *(table stakes, but we do it properly)*
+### 5️⃣ One brain, every channel *(table stakes, but we do it properly)*
 
 CLI / Telegram / WhatsApp / WeChat / FB / Web Console / MCP all share the same agent record — same memory, same persona, same knowledge base, same 22+ tools. Most agents claim this; few wire it end-to-end across customer-facing messaging channels.
 
-### 5️⃣ Cloud agent borrows your laptop *(`nexra daemon`)*
+### 6️⃣ Cloud agent borrows your laptop *(`nexra daemon`)*
 
 Run `nexra daemon` and your Telegram bot can call `fs_write` / `bash_exec` on your Mac through a long-poll bridge. Useful for "export today's orders to my desktop" workflows. *(Other agents can technically do this — we just made it one command, with a hardened security model: 127.0.0.1 only, pairing token, Origin whitelist.)*
 
