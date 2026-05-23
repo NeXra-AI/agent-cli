@@ -2,9 +2,9 @@
 
 # 🤖 NeXra Agent CLI
 
-**电商创业者专属的 AI agent。**
+### 一个大脑,跑遍所有渠道,为开店而生。
 
-第一个真正"为开店而生"的 AI agent。出图 / 出视频 / 出音乐 / 建站 **+** 产品 / 订单 / 顾客 / 库存 / 营销 — 全在你的终端,或者通过 MCP 接入你已经在用的 Claude Code / Cursor / Cline。
+**让同一个 AI agent 守住你的店 — 在终端、Telegram、WhatsApp、微信、Facebook、网页、甚至 Claude Code/Cursor (MCP) 共享同一份记忆、同一个人设、同一套技能。**
 
 ```bash
 npm install -g @nexra-ai/agent-cli
@@ -18,11 +18,44 @@ nexra chat
 
 </div>
 
-> **v0.5 重磅** — **统一 agent runtime**。你终端的 `nexra chat`、你店里 Telegram 的客服 bot、`nexra-ai.co/admin` 网页里的 Agent Console,现在**是同一个 agent** — 同一份记忆、同一个人设、同一套技能、同一个知识库。CLI 多了 fs/bash/http,**因为它跑在你自己的机器上**。
+---
+
+## 🎯 NeXra 跟其他 AI agent 不一样在哪
+
+市面上的 agent 都押一个卖点:**自我进化**、**最懂你**、**啥都能干**。NeXra 走另一条路 — **押"领域 (零售)"+"拓扑 (一脑跨端)" 两件事,做深做透**。
+
+| | 它的押注 | 一句话 |
+|---|---|---|
+| **Hermes** | "会自我进化的 agent" | 越用越聪明 |
+| **OpenHuman** | "最懂你的 agent" | 极致个性化 |
+| **OpenClaw** | "全能助手" | 广而灵活 |
+| **🟣 NeXra Agent** | **"一脑跨端,专为开店"** | **跨渠道 + 电商原生 + 借你机器算力** |
+
+### 只有 NeXra 做的 5 件事
+
+1. **🧠 一个大脑,所有渠道。** CLI + Telegram + WhatsApp + 微信 + Facebook + 网页 Console + MCP — 全部跑**同一个 agent**:同一份记忆、同一个人设、同一套 22 工具、同一份 RAG 知识库。早上顾客在 Telegram 跟 bot 聊产品,下午你开 `nexra chat` 它**记得**。其他 agent 都是各端各存。
+2. **🛰  本机权限桥 — Cloud agent 借你机器的手。** 跑一句 `nexra daemon`,你**远程的 Telegram bot 就能把文件存到你的 Mac、跑 shell 脚本、抓取 URL**。全行业没第二家这么做。
+3. **🛒 开店原生,开箱即跑。** 22 个工具预接好:产品/订单/顾客/库存/营销 + **Studio 内置**(图/视频/音乐/网站/PPT)。不用教 NeXra 什么是 SKU、什么是退款 — 它一上来就懂。
+4. **🔌 接进 Claude Code / Cursor / Cline / Zed。** `nexra mcp` 把这 22 个工具喂给任何 MCP 客户端。不用换 IDE,直接给你现有的 coding agent 装上电商超能力。
+5. **💸 70/30 分成的插件市场。** 任何人能发 NeXra 插件赚钱,作者拿 70%。封闭生态的 agent 给不了这个。
 
 ---
 
-## ✨ 为什么用 NeXra Agent
+## ⚡ 30 秒上手
+
+```bash
+npm install -g @nexra-ai/agent-cli
+nexra login                       # OAuth 浏览器登, 不需要 API key
+nexra chat                        # 跟你的店聊天
+nexra channels bind telegram      # 一秒变 24/7 客服 bot
+nexra daemon                      # 让 bot 借你 Mac 的手 (可选)
+```
+
+完事。同一个 agent、同一个大脑 — 在你终端、在你顾客手机里、在 Claude Code 里面。
+
+---
+
+## ✨ vs 通用 AI agent
 
 **Claude Code 适合写代码。NeXra Agent 适合开店。**
 
@@ -31,13 +64,29 @@ nexra chat
 | **开箱即用工具** | 空白 — 自己接 | **22 个预接好的工具** (Studio + Shop) |
 | **它懂什么** | 代码、文件、shell | 产品、订单、库存、顾客、广告 |
 | **登录方式** | 每个工具一个 API key | **一次 OAuth 全搞定** |
-| **多端口** | 只在终端 | 终端 + 网页 + **MCP**(接你现有的 agent) |
+| **渠道** | 只在终端 | **终端 + Telegram + WA + 微信 + FB + 网页 + MCP** |
+| **跨端共享记忆** | ✗ 单端各存 | ✅ 一脑跨端 |
+| **Cloud agent ↔ 你机器** | ✗ | ✅ `nexra daemon` 长轮询桥 |
+| **Studio (图/视频/音乐/站/PPT)** | ✗ | ✅ 内置,按次计费 |
+| **插件市场** | ✗ | ✅ 70/30 分成 |
 | **跑在哪** | 你的机器 | **你的机器** (你的数据,你做主) |
-| **统一记忆** | 单端各自存 | **三个端口同一份记忆** |
 
 ---
 
-## 🚀 三种用法
+## 🚀 五种用法 — *同一个大脑,所有界面*
+
+只训一次 agent,顾客和员工不管从哪个渠道找过来,它都已经在那。
+
+```
+   终端          网页 Console     Telegram bot     WhatsApp/FB/微信        Claude Code / Cursor
+ nexra chat   nexra-ai.co/admin   @你的店bot         (OAuth 绑定)         (MCP server)
+      \             \                |                   /                       /
+       \             \               |                  /                       /
+        ──────────── 共享 agent runtime (一份记忆 + 一个人设 + 22 工具) ────────
+                                       │
+                                       └─ 可选: `nexra daemon` 让 cloud 端的
+                                          渠道调你笔电的 fs/bash
+```
 
 ### 1. 终端 — NeXra 当你的 shell agent
 
@@ -86,6 +135,38 @@ CLI 独有的本机工具(跑在**你**的机器,不是我们的):
 ### 3. 网页 — 在 NeXra 管理后台里
 
 登 [nexra-ai.co](https://nexra-ai.co) → **Agent Console** → **🤖 NeXra Agent** 标签。同样 22 个工具,同样 agent runtime,浏览器 UI。不用装任何东西。
+
+### 4. 顾客端 — 把同一个 agent 绑你店里所有渠道
+
+把同一个 agent 变成 24/7 客服 bot,在终端就能配:
+
+```bash
+nexra channels bind telegram      # 粘 @BotFather 拿的 token
+nexra channels bind wechat        # 粘微信公众号 AppID + AppSecret
+nexra channels bind web           # 拿一段 <script> 嵌你官网
+nexra channels bind whatsapp      # 跳网页走 Meta Business OAuth
+nexra channels bind facebook      # 跳网页走 Page 管理员 OAuth
+```
+
+每个渠道跑的都是**同一个 agent** — 同样的人设、同样的产品知识、同样的对话历史。顾客在 Telegram 问 "这个有 M 码吗?",agent 自动调 `shop_list_products` 回答。
+
+### 5. ⭐ Daemon 本机桥 — 让 cloud agent 借你机器的手
+
+杀手锏。跑一次:
+
+```bash
+nexra daemon
+```
+
+你的 Telegram bot、网页 Console agent、未来任何渠道 — 都能通过长轮询桥**调你笔电上的 `fs_read` / `fs_write` / `bash_exec` / `http_fetch`**。你在 Telegram 跟 bot 说 "把今天订单导出到 ~/Desktop/orders.csv" — 它**真的导**。把客服 Telegram 接给你店里 server 上的 agent,它能反手回到你办公室 Mac 上"打印这张装箱单"。
+
+```
+Telegram bot ─→ NeXra server ─→ LLM 选工具
+                       │
+                       └─ 如果是本机工具 (fs/bash/http) ─→ 长轮询 ─→ 你 `nexra daemon` ─→ 在你 Mac 跑 ─→ 结果回传
+```
+
+🔒 **安全**: daemon 只绑 127.0.0.1、每实例一个随机配对 token、严格 Origin 白名单。本机 fs/bash 默认**关**,要 `nexra agents allow <id>` 一个一个 agent 开。顾客面向的 Telegram bot 不开你就不会开 — 不怕顾客让 bot 在你机器跑 `rm -rf`。
 
 ---
 
@@ -220,7 +301,8 @@ npm run dev -- whoami
 
 <div align="center">
 
-**电商创业者专属的 AI agent。**
+### 一个大脑,跑遍所有渠道,为开店而生。
+
 Made with ❤️ in 马来西亚 by [NeXra AI](https://nexra-ai.co)
 
 </div>

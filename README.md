@@ -2,9 +2,9 @@
 
 # 🤖 NeXra Agent CLI
 
-**The AI agent for e-commerce founders.**
+### One brain. Every channel. Built for retail.
 
-The first agent purpose-built to run a shop. Image / video / music / website generation **+** products / orders / customers / inventory / marketing — all from your terminal, or plugged into Claude Code / Cursor / Cline via MCP.
+**The AI agent that runs your shop — across CLI, Telegram, WhatsApp, WeChat, Facebook, Web, and any MCP client — sharing one memory, one persona, one skill set.**
 
 ```bash
 npm install -g @nexra-ai/agent-cli
@@ -18,11 +18,44 @@ nexra chat
 
 </div>
 
-> **v0.5** — Unified agent runtime. Your `nexra chat`, the bot on your store's Telegram channel, and the Web Agent Console at `nexra-ai.co/admin` are now **the same agent** — same memory, same persona, same skills, same knowledge base. The CLI adds fs/bash/http on top because it runs on **your** machine.
+---
+
+## 🎯 What makes NeXra different
+
+Most AI agents pick one trick: *self-evolving*, *most-personal*, *general-purpose*. NeXra picks **a domain (retail) + a topology (every channel, one brain)** and goes deep.
+
+| | Their bet | What it means |
+|---|---|---|
+| **Hermes** | "Self-evolving agent" | Smarter over time |
+| **OpenHuman** | "The agent that knows you best" | Hyper-personal |
+| **OpenClaw** | "All-purpose assistant" | Wide & flexible |
+| **🟣 NeXra Agent** | **"One brain, every channel, built for retail"** | **Cross-channel + e-commerce-native + your machine** |
+
+### The 5 things only NeXra does
+
+1. **🧠 One brain, every channel.** CLI + Telegram + WhatsApp + WeChat + Facebook + Web Console + MCP — all share the **same agent**: same memory, same persona, same 22 tools, same RAG knowledge base. Your customer chats the Telegram bot at 9am; you open `nexra chat` at 3pm — *it remembers*. No other agent does this end-to-end.
+2. **🛰  Local bridge to the cloud agent.** Run `nexra daemon` once and your **Telegram bot can save files to your Mac, run shell scripts, fetch URLs** — the cloud agent borrows your laptop's hands. *Nobody else ships this.*
+3. **🛒 E-commerce-native out of the box.** 22 tools pre-wired: products / orders / customers / inventory / marketing + **Studio inside** (image / video / music / website / PPT). You don't teach NeXra what an SKU or a refund is — it ships knowing.
+4. **🔌 Plugs into Claude Code, Cursor, Cline, Zed.** `nexra mcp` exposes those 22 tools to any MCP client. Don't switch your coding agent — give it 22 e-commerce superpowers.
+5. **💸 70/30 plugin marketplace.** Anyone can ship a NeXra plugin and earn from it. Authors keep 70%. Closed-garden agents can't say this.
 
 ---
 
-## ✨ Why NeXra Agent
+## ⚡ Quickstart
+
+```bash
+npm install -g @nexra-ai/agent-cli
+nexra login              # OAuth device flow — no API keys
+nexra chat               # talk to your shop
+nexra channels bind telegram   # turn it into a 24/7 customer-service bot
+nexra daemon             # let the bot use your Mac (optional)
+```
+
+That's it. Same agent, same brain — on your terminal, on your customers' phones, inside Claude Code.
+
+---
+
+## ✨ Side-by-side vs generic AI agents
 
 **Claude Code is great at code. NeXra Agent is great at *running an e-commerce business*.**
 
@@ -31,13 +64,29 @@ nexra chat
 | **Out-of-the-box tools** | Empty toolbelt — bring your own | **22 pre-wired** (Studio + Shop) |
 | **What it knows** | Code, files, shell | Products, orders, inventory, customers, ads |
 | **Auth** | Per-tool API keys | **One OAuth login** |
-| **Multi-channel** | Just terminal | Terminal + Web + **MCP** (works inside your existing agent) |
+| **Channels** | Just terminal | **Terminal + Telegram + WA + WeChat + FB + Web + MCP** |
+| **Shared memory across channels** | ✗ Per-tool | ✅ One brain, every channel |
+| **Cloud agent ↔ your machine** | ✗ | ✅ `nexra daemon` long-poll bridge |
+| **Studio (image/video/music/site/PPT)** | ✗ | ✅ Built-in, per-call billing |
+| **Plugin marketplace** | ✗ | ✅ 70/30 split |
 | **Server** | Yours | **Yours** (your data, your control) |
-| **Pricing** | LLM tokens | LLM tokens **+** per-generation (image/video pricing exposed) |
 
 ---
 
-## 🚀 Three ways to use it
+## 🚀 Five ways to use it — *same brain, every surface*
+
+You only train your agent once. Wherever your customers or staff reach out, NeXra is already there.
+
+```
+    Terminal       Web Console        Telegram bot       WhatsApp/FB/WeChat       Claude Code / Cursor
+   nexra chat   nexra-ai.co/admin   @YourStoreBot           (OAuth bind)         (MCP server)
+        \              \                 |                       /                       /
+         \              \                |                      /                       /
+          ────────────── shared agent runtime (one memory + one persona + 22 tools) ──────
+                                              │
+                                              └─ optional: `nexra daemon` lets cloud-side
+                                                 channels call fs/bash on your laptop
+```
 
 ### 1. Terminal agent — *NeXra is your shell agent*
 
@@ -90,6 +139,38 @@ Restart Claude Code / Cursor and ask:
 ### 3. Web — *inside the NeXra Admin dashboard*
 
 Sign in at [nexra-ai.co](https://nexra-ai.co) → **Agent Console** → **🤖 NeXra Agent** tab. Same 22 tools, same agent runtime, browser UI. No install required.
+
+### 4. Customer-facing — *bind your agent to your store's channels*
+
+Turn the same agent into a 24/7 customer-service bot — straight from your terminal:
+
+```bash
+nexra channels bind telegram      # paste a @BotFather token
+nexra channels bind wechat        # paste WeChat AppID + secret
+nexra channels bind web           # get a <script> widget snippet
+nexra channels bind whatsapp      # opens admin (Meta Business OAuth)
+nexra channels bind facebook      # opens admin (Page admin OAuth)
+```
+
+Every channel uses the **same agent** you've been chatting with in the terminal. Same persona, same product knowledge, same conversation history. Customers can ask "do you have this in size M?" on Telegram and your agent answers using `shop_list_products` — automatically.
+
+### 5. ⭐ Daemon bridge — *let your cloud agent borrow your machine*
+
+The killer feature. Run once:
+
+```bash
+nexra daemon
+```
+
+…and now your Telegram bot, your Web console agent, and any future channel can call **`fs_read` / `fs_write` / `bash_exec` / `http_fetch` on YOUR laptop** via a long-poll bridge. Ask the Telegram bot *"export today's orders to ~/Desktop/orders.csv"* — it actually does it. Bind a customer-service Telegram chat → your agent on your store's server, and watch it reach back to your office Mac to fulfil "print this packing list".
+
+```
+Telegram bot ─→ NeXra server ─→ LLM picks a tool
+                       │
+                       └─ if it's a local tool (fs/bash/http) ─→ long-polls ─→ your `nexra daemon` ─→ runs on your Mac ─→ result flows back
+```
+
+🔒 **Security**: daemon binds 127.0.0.1, requires a per-instance pairing token, strict Origin whitelist. Local fs/bash is **off** by default; you have to `nexra agents allow <id>` per agent. Customer-facing Telegram bots stay locked down unless you flip the switch yourself.
 
 ---
 
@@ -237,7 +318,10 @@ npm run dev -- whoami
 - [x] **v0.2** — `chat` agent REPL, video/music/site/ppt/voice, multi-profile, tunnel, plugin init/dev/publish, update
 - [x] **v0.3** — System tools (fs/bash/http), real billing, 22-tool server registry, web Agent Console
 - [x] **v0.4** — **MCP server** (`nexra mcp`) — works in Claude Code / Cursor / Cline / any MCP client
-- [x] **v0.5** — **Unified agent runtime** — CLI / Telegram / Web Console share the same agent, memory, persona, knowledge. `nexra agents` to pick which agent runs your chat. `nexra update` actually upgrades.
+- [x] **v0.5.0** — **Unified agent runtime** — CLI / Telegram / Web Console share the same agent, memory, persona, knowledge. `nexra agents` to pick which agent runs your chat. `nexra update` actually upgrades.
+- [x] **v0.5.1** — `nexra channels bind` — Telegram / WeChat / Web widget from the terminal; WhatsApp / Facebook / Siri via OAuth.
+- [x] **v0.5.2** — `nexra daemon` — local HTTP bridge so the Web Agent Console can call fs/bash on your Mac.
+- [x] **v0.5.4** — **Daemon long-poll bridge** — Telegram & remote channels can call `fs_read` / `bash_exec` on your laptop too.
 - [ ] **v0.6** — Plugin sandbox runtime (signing + rlimit + permission whitelist)
 - [ ] **v0.7** — Named persistent Cloudflare tunnels + standalone signed binaries
 
@@ -269,7 +353,8 @@ Per-call pricing on [nexra-ai.co/pricing](https://nexra-ai.co/pricing). All AI c
 
 <div align="center">
 
-**The AI agent for e-commerce founders.**
+### One brain. Every channel. Built for retail.
+
 Made with ❤️ in Malaysia by [NeXra AI](https://nexra-ai.co).
 
 </div>

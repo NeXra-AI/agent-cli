@@ -1,7 +1,7 @@
 {
   "name": "@nexra-ai/agent-cli",
   "version": "0.5.6",
-  "description": "NeXra Agent — The AI agent for e-commerce founders. Built-in Studio (image/video/music/site/PPT) + Shop ops + Plugin marketplace. Runs on your server.",
+  "description": "NeXra Agent — One brain, every channel, built for retail. The same AI agent on your terminal, Telegram, WhatsApp, WeChat, Facebook, Web, and Claude Code/Cursor (MCP) — sharing memory + persona + 22 pre-wired tools (Studio image/video/music/site/PPT + Shop ops). Plus `nexra daemon` lets the cloud agent borrow your laptop's fs/bash.",
   "type": "module",
   "bin": {
     "nexra": "./dist/index.js"
@@ -26,6 +26,12 @@
     "nexra",
     "studio",
     "cli",
+    "mcp",
+    "model-context-protocol",
+    "telegram-bot",
+    "whatsapp-bot",
+    "wechat-bot",
+    "omnichannel-agent",
     "shopify-alternative"
   ],
   "homepage": "https://nexra-ai.co",
