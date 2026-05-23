@@ -2,9 +2,11 @@
 
 # 🤖 NeXra Agent CLI
 
-### 一个大脑,跑遍所有渠道,为开店而生。
+### 装一个 agent,顶一整柜电商 SaaS。
 
-**让同一个 AI agent 守住你的店 — 在终端、Telegram、WhatsApp、微信、Facebook、网页、甚至 Claude Code/Cursor (MCP) 共享同一份记忆、同一个人设、同一套技能。**
+**自己什么都能做,不调外面的 API。**
+
+写歌、做 MV、建官网、出短剧、写小说、剪营销片、出商品照、上架 Shopee/TikTok、投 FB Ads、对账银行流水、跑物流 — **50+ AI 能力全部原生内置,一个都不用外接。**
 
 ```bash
 npm install -g @nexra-ai/agent-cli
@@ -20,24 +22,70 @@ nexra chat
 
 ---
 
-## 🎯 NeXra 跟其他 AI agent 不一样在哪
+## 🎯 一句话差异化
 
-市面上的 agent 都押一个卖点:**自我进化**、**最懂你**、**啥都能干**。NeXra 走另一条路 — **押"领域 (零售)"+"拓扑 (一脑跨端)" 两件事,做深做透**。
+别家 agent 都在卖**自己**。NeXra 卖的是**自己里面装的整间店**。
 
-| | 它的押注 | 一句话 |
+| Agent | 一句话卖点 | …装完之后,你还得自己接: |
 |---|---|---|
-| **Hermes** | "会自我进化的 agent" | 越用越聪明 |
-| **OpenHuman** | "最懂你的 agent" | 极致个性化 |
-| **OpenClaw** | "全能助手" | 广而灵活 |
-| **🟣 NeXra Agent** | **"一脑跨端,专为开店"** | **跨渠道 + 电商原生 + 借你机器算力** |
+| **Hermes** | *会自我进化* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
+| **OpenHuman** | *最懂你* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
+| **OpenClaw** | *全能助手* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
+| **🟣 NeXra** | ***一柜子 SaaS 打包成一个 agent*** | **— 没有。`nexra login` 就够。** |
 
-### 只有 NeXra 做的 5 件事
+---
 
-1. **🧠 一个大脑,所有渠道。** CLI + Telegram + WhatsApp + 微信 + Facebook + 网页 Console + MCP — 全部跑**同一个 agent**:同一份记忆、同一个人设、同一套 22 工具、同一份 RAG 知识库。早上顾客在 Telegram 跟 bot 聊产品,下午你开 `nexra chat` 它**记得**。其他 agent 都是各端各存。
-2. **🛰  本机权限桥 — Cloud agent 借你机器的手。** 跑一句 `nexra daemon`,你**远程的 Telegram bot 就能把文件存到你的 Mac、跑 shell 脚本、抓取 URL**。全行业没第二家这么做。
-3. **🛒 开店原生,开箱即跑。** 22 个工具预接好:产品/订单/顾客/库存/营销 + **Studio 内置**(图/视频/音乐/网站/PPT)。不用教 NeXra 什么是 SKU、什么是退款 — 它一上来就懂。
-4. **🔌 接进 Claude Code / Cursor / Cline / Zed。** `nexra mcp` 把这 22 个工具喂给任何 MCP 客户端。不用换 IDE,直接给你现有的 coding agent 装上电商超能力。
-5. **💸 70/30 分成的插件市场。** 任何人能发 NeXra 插件赚钱,作者拿 70%。封闭生态的 agent 给不了这个。
+## ✨ 真正起作用的 5 件事
+
+### 1️⃣ 50+ 原生 AI 能力 — *agent 自己干,不靠外部 API*
+
+你在 Telegram、终端、随便哪儿,一句话:
+
+| 你说… | NeXra 自己完成(不调外部 API) |
+|---|---|
+| *"给夏季新品写一首主题曲"* | 🎵 出歌(MiniMax) |
+| *"拿这首歌剪一支 30 秒 MV"* | 🎬 出 MV(Seedance) |
+| *"做一个落地页 + hero 文生视频"* | 🌐 建官网(含 hero 视频) |
+| *"做一支 30 秒短剧推这条裙子"* | 🎭 出短剧(BytePlus 数字人) |
+| *"写一篇 5 千字种草小说带产品植入"* | 📖 出小说 |
+| *"把这视频剪成 9:16 IG Reel"* | ✂️ 自动剪 |
+| *"给 SKU A68862 投一组 FB Ads + A/B"* | 📊 自动投放 + Bayesian A/B |
+| *"把这个商品上架 Shopee + TikTok"* | 🛍 自动跨境上架 |
+| *"对一下今天银行流水跟未付订单"* | 💸 AI 对账 |
+
+其他 agent 这些事 → 接 Suno + Runway + Webflow + FB Marketing + Shopify + … 每家一套 SDK、一份月费、一个 API key。
+**NeXra 自己就是那一柜子 SDK。**
+
+### 2️⃣ 不用换 IDE — *一个 NeXra 替代 22 个平台 API*
+
+已经在用 Claude Code?加**一行**:
+
+```json
+{ "mcpServers": { "nexra": { "command": "nexra", "args": ["mcp"] } } }
+```
+
+你的 Claude Code 立刻多 22 个电商 + 创意工具 — **不然你得去 22 个平台分别注册、拿 22 个 API key、配 22 份计费、自己写 22 段集成代码**。NeXra 把这一切收成一次 OAuth。
+
+### 3️⃣ Agent 应用的"淘宝" — *你做的 skill 终于有地方卖*
+
+你给 Claude Code / Hermes 写了一个酷 plugin — **谁买?** 没人。烂在自己电脑。
+
+NeXra 是**第一个专门给 agent plugin 开的应用市场**:
+
+- 发上去 → 真在花钱的电商租户付费安装
+- **作者拿 70%**,NeXra 抽 30%
+- AI 帮你生成骨架(`nexra plugin init`)
+- 内置安装 / 升级 / 沙盒 / 签名发布
+
+对开发者:终于有分发渠道。对店主:有审核过的零售自动化应用市场。
+
+### 4️⃣ 一脑跨端 *(基本面,但做到位)*
+
+CLI / Telegram / WhatsApp / 微信 / FB / 网页 / MCP 共享同一个 agent — 同一份记忆、人设、知识库、22+ 工具。很多 agent 嘴上都说,但很少真正端到端打通顾客面渠道。
+
+### 5️⃣ Cloud agent 借你 Mac 的手 *(`nexra daemon`)*
+
+跑一句 `nexra daemon`,你 Telegram bot 就能通过长轮询调你笔电的 `fs_write` / `bash_exec` — *"把今天订单导到 ~/Desktop"* 它真导。*(其他 agent 技术上也能做,我们做成了一条命令 + 加固的安全模型:127.0.0.1 only、配对 token、Origin 白名单。)*
 
 ---
 
@@ -51,8 +99,6 @@ nexra channels bind telegram      # 一秒变 24/7 客服 bot
 nexra daemon                      # 让 bot 借你 Mac 的手 (可选)
 ```
 
-完事。同一个 agent、同一个大脑 — 在你终端、在你顾客手机里、在 Claude Code 里面。
-
 ---
 
 ## ✨ vs 通用 AI agent
@@ -61,15 +107,12 @@ nexra daemon                      # 让 bot 借你 Mac 的手 (可选)
 
 | | 通用 AI agent (Claude Code, Cursor) | **NeXra Agent** |
 |---|---|---|
-| **开箱即用工具** | 空白 — 自己接 | **22 个预接好的工具** (Studio + Shop) |
-| **它懂什么** | 代码、文件、shell | 产品、订单、库存、顾客、广告 |
-| **登录方式** | 每个工具一个 API key | **一次 OAuth 全搞定** |
+| **它能自己生成什么** | 代码、文本 | **图、视频、音乐、MV、官网、PPT、配音、短剧、小说、广告、上架、对账** |
+| **登录方式** | 每个工具一个 API key (22+) | **一次 OAuth 全搞定** |
 | **渠道** | 只在终端 | **终端 + Telegram + WA + 微信 + FB + 网页 + MCP** |
-| **跨端共享记忆** | ✗ 单端各存 | ✅ 一脑跨端 |
-| **Cloud agent ↔ 你机器** | ✗ | ✅ `nexra daemon` 长轮询桥 |
-| **Studio (图/视频/音乐/站/PPT)** | ✗ | ✅ 内置,按次计费 |
-| **插件市场** | ✗ | ✅ 70/30 分成 |
-| **跑在哪** | 你的机器 | **你的机器** (你的数据,你做主) |
+| **跨端共享记忆** | ✗ | ✅ 一脑跨端 |
+| **能卖你写的 skill 的市场** | ✗ | ✅ 70/30 分成,真付费买家 |
+| **能接进 Claude Code / Cursor** | n/a | ✅ `nexra mcp` |
 
 ---
 
@@ -202,10 +245,15 @@ nexra agents allow 6            # 开它的 fs/bash 权限 (admin only!)
 
 ---
 
-## 📦 22 个内置工具
+## 📦 内置能力
 
-### 🎨 Studio (创作)
+NeXra 平台当前 **50+ 原生 AI 能力**(Studio + Shop + 营销 + Marketplace + 物流 + 对账)。CLI 现版本通过 MCP / chat 暴露 **22 个**,其余仍在网页 Console + Telegram bot 提供,后续版本陆续接进 CLI。
+
+### CLI 当前 22 工具
+
+### 🎨 Studio (创作 — 原生生成,不调外部 API)
 - **`studio_generate_image`** — 图片生成(Qwen / SDXL / Seedance)
+- *(平台另有,下版本接 CLI:出歌 · 出视频 · 出 MV · 短剧 · 小说 · 网站 · PPT · 配音 · 数字人 · photo-AI · 图生视频 · 网页介绍视频)*
 
 ### 🛒 Shop (运营)
 - **`shop_list_products`** / **`shop_get_product`** — 浏览/查产品
@@ -214,14 +262,20 @@ nexra agents allow 6            # 开它的 fs/bash 权限 (admin only!)
 - **`search_products`** / **`trending_products`** — 关键词 + 热卖榜
 - **`lookup_order`** / **`cancel_order`** — 订单操作
 - **`my_cart`** / **`add_to_cart`** — 购物车
+- *(平台另有:AutoCount POS 同步 · 采购单 · 盘点 · 代购 · 分销 · 餐饮垂直 · 房产垂直 — 网页 Console 已开)*
 
 ### 📣 营销 & 内容
 - **`generate_marketing_copy`** — FB / Email / WhatsApp 文案
+- *(平台另有:FB Ads 自动化 + Bayesian A/B · Custom Audience · Blog Autopilot · SMM 流量 · AI 银行流水对账 — 网页 Console 已开)*
 
-### 🔌 插件市场
+### 🌍 Marketplace & 物流(平台 — 后续接 CLI)
+- Shopee + TikTok Shop adapter(跨境上架同步)
+- Skynet + EasyParcel 物流(主账号分流 + 20% 净利)
+
+### 🔌 插件市场 — *Agent skill 的淘宝*
 - **`generate_plugin_code`** — AI 自动写插件
 - **`list_marketplace_plugins`** / **`install_marketplace_plugin`** / **`uninstall_plugin`** / **`upgrade_installed_plugin`**
-- **`publish_new_plugin_version`** — 作者发版
+- **`publish_new_plugin_version`** — 作者发版(**70% 分成**)
 - **`test_plugin`** — 沙盒测试
 
 ### 👤 账户
@@ -230,7 +284,7 @@ nexra agents allow 6            # 开它的 fs/bash 权限 (admin only!)
 ### 💻 本机(仅 CLI)
 - **`fs_read`** / **`fs_write`** / **`bash_exec`** / **`http_fetch`**
 
-**加新工具** — server 端注册表改一处, CLI 自动看到, 不需要重发版。
+**Server 端工具注册表** — 平台多一个能力,下次 `nexra chat` 就看到,不用重发 CLI 版本。
 
 ---
 

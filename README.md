@@ -2,9 +2,11 @@
 
 # 🤖 NeXra Agent CLI
 
-### One brain. Every channel. Built for retail.
+### One agent. A whole closet of SaaS inside.
 
-**The AI agent that runs your shop — across CLI, Telegram, WhatsApp, WeChat, Facebook, Web, and any MCP client — sharing one memory, one persona, one skill set.**
+**Generates everything. Integrates nothing.**
+
+Songs · MVs · websites · short dramas · novels · marketing reels · product photos · Shopee / TikTok listings · FB ads · bank-statement reconciliation · logistics — **50+ AI capabilities native, no external API to wire up**.
 
 ```bash
 npm install -g @nexra-ai/agent-cli
@@ -20,24 +22,70 @@ nexra chat
 
 ---
 
-## 🎯 What makes NeXra different
+## 🎯 The one-line difference
 
-Most AI agents pick one trick: *self-evolving*, *most-personal*, *general-purpose*. NeXra picks **a domain (retail) + a topology (every channel, one brain)** and goes deep.
+Every agent sells *itself*. NeXra sells *the whole shop inside itself*.
 
-| | Their bet | What it means |
+| Agent | One-liner pitch | …so after you install it, you still need to wire up: |
 |---|---|---|
-| **Hermes** | "Self-evolving agent" | Smarter over time |
-| **OpenHuman** | "The agent that knows you best" | Hyper-personal |
-| **OpenClaw** | "All-purpose assistant" | Wide & flexible |
-| **🟣 NeXra Agent** | **"One brain, every channel, built for retail"** | **Cross-channel + e-commerce-native + your machine** |
+| **Hermes** | *Self-evolving agent* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
+| **OpenHuman** | *The agent that knows you best* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
+| **OpenClaw** | *General-purpose assistant* | Suno + Runway + Webflow + Shopify + FB Marketing + Mailgun + Twilio + Shopee + TikTok + … |
+| **🟣 NeXra** | ***A whole closet of SaaS, packed into one agent*** | **— nothing. Just `nexra login`.** |
 
-### The 5 things only NeXra does
+---
 
-1. **🧠 One brain, every channel.** CLI + Telegram + WhatsApp + WeChat + Facebook + Web Console + MCP — all share the **same agent**: same memory, same persona, same 22 tools, same RAG knowledge base. Your customer chats the Telegram bot at 9am; you open `nexra chat` at 3pm — *it remembers*. No other agent does this end-to-end.
-2. **🛰  Local bridge to the cloud agent.** Run `nexra daemon` once and your **Telegram bot can save files to your Mac, run shell scripts, fetch URLs** — the cloud agent borrows your laptop's hands. *Nobody else ships this.*
-3. **🛒 E-commerce-native out of the box.** 22 tools pre-wired: products / orders / customers / inventory / marketing + **Studio inside** (image / video / music / website / PPT). You don't teach NeXra what an SKU or a refund is — it ships knowing.
-4. **🔌 Plugs into Claude Code, Cursor, Cline, Zed.** `nexra mcp` exposes those 22 tools to any MCP client. Don't switch your coding agent — give it 22 e-commerce superpowers.
-5. **💸 70/30 plugin marketplace.** Anyone can ship a NeXra plugin and earn from it. Authors keep 70%. Closed-garden agents can't say this.
+## ✨ The 5 things that actually matter
+
+### 1️⃣ 50+ native AI capabilities — *the agent does it itself, not by calling an API*
+
+Just talk to it (in Telegram, terminal, anywhere):
+
+| You ask… | NeXra does (no external API) |
+|---|---|
+| *"Write a theme song for the summer collection"* | 🎵 Generates a song (MiniMax) |
+| *"Cut a 30-second MV using that song"* | 🎬 Generates the MV (Seedance) |
+| *"Build a landing page with a hero video"* | 🌐 Builds the website (Site Builder + hero video) |
+| *"Make a 30-second short drama starring this dress"* | 🎭 Generates the short drama (digital human) |
+| *"Write a 5,000-word seed-marketing novel with my product"* | 📖 Generates the novel |
+| *"Cut that into a 9:16 IG Reel"* | ✂️ Re-edits the video |
+| *"Run an A/B FB ad campaign for SKU A68862"* | 📊 Spins up FB Ads + Bayesian A/B |
+| *"List my product on Shopee and TikTok Shop"* | 🛍 Pushes to marketplaces |
+| *"Reconcile today's bank statement against unpaid orders"* | 💸 AI bank reconciliation |
+
+Other agents send these to Suno / Runway / Webflow / FB Marketing / Shopify / each their own SDK and billing.
+**NeXra is the SDK.**
+
+### 2️⃣ Don't switch IDE — *one NeXra replaces 22+ API integrations in Claude Code/Cursor*
+
+Already in Claude Code? Add **one line** of MCP config:
+
+```json
+{ "mcpServers": { "nexra": { "command": "nexra", "args": ["mcp"] } } }
+```
+
+Now your Claude Code has 22 e-commerce + creative tools — **the alternative is signing up at 22 separate platforms, getting 22 API keys, billing 22 ways, and writing the integration code yourself**. NeXra collapses all of that into one OAuth login.
+
+### 3️⃣ The Taobao for agent skills — *finally, somewhere to sell what you build*
+
+You wrote a clever plugin / skill for Claude Code or Hermes — **who buys it?** Nobody. It rots on your laptop.
+
+NeXra is **the first marketplace built specifically for agent plugins**:
+
+- Publish a plugin → real e-commerce tenants pay real RM to install
+- **Author keeps 70%**, NeXra takes 30%
+- AI scaffolds your plugin (`nexra plugin init`)
+- Built-in install / upgrade / sandbox / signed releases
+
+For agent builders this is the missing distribution layer. For shop owners it's an app store of vetted retail automations.
+
+### 4️⃣ One brain, every channel *(table stakes, but we do it properly)*
+
+CLI / Telegram / WhatsApp / WeChat / FB / Web Console / MCP all share the same agent record — same memory, same persona, same knowledge base, same 22+ tools. Most agents claim this; few wire it end-to-end across customer-facing messaging channels.
+
+### 5️⃣ Cloud agent borrows your laptop *(`nexra daemon`)*
+
+Run `nexra daemon` and your Telegram bot can call `fs_write` / `bash_exec` on your Mac through a long-poll bridge. Useful for "export today's orders to my desktop" workflows. *(Other agents can technically do this — we just made it one command, with a hardened security model: 127.0.0.1 only, pairing token, Origin whitelist.)*
 
 ---
 
@@ -45,13 +93,11 @@ Most AI agents pick one trick: *self-evolving*, *most-personal*, *general-purpos
 
 ```bash
 npm install -g @nexra-ai/agent-cli
-nexra login              # OAuth device flow — no API keys
-nexra chat               # talk to your shop
-nexra channels bind telegram   # turn it into a 24/7 customer-service bot
-nexra daemon             # let the bot use your Mac (optional)
+nexra login                       # OAuth device flow — no API keys
+nexra chat                        # talk to your shop
+nexra channels bind telegram      # turn it into a 24/7 customer-service bot
+nexra daemon                      # let the bot use your Mac (optional)
 ```
-
-That's it. Same agent, same brain — on your terminal, on your customers' phones, inside Claude Code.
 
 ---
 
@@ -61,15 +107,12 @@ That's it. Same agent, same brain — on your terminal, on your customers' phone
 
 | | Generic AI agents (Claude Code, Cursor, Aider) | **NeXra Agent** |
 |---|---|---|
-| **Out-of-the-box tools** | Empty toolbelt — bring your own | **22 pre-wired** (Studio + Shop) |
-| **What it knows** | Code, files, shell | Products, orders, inventory, customers, ads |
-| **Auth** | Per-tool API keys | **One OAuth login** |
+| **What it generates natively** | Code, text | **Image, video, music, MV, website, PPT, voice, short drama, novel, ads, listings, reports** |
+| **Auth** | Per-tool API keys (22+) | **One OAuth login** |
 | **Channels** | Just terminal | **Terminal + Telegram + WA + WeChat + FB + Web + MCP** |
 | **Shared memory across channels** | ✗ Per-tool | ✅ One brain, every channel |
-| **Cloud agent ↔ your machine** | ✗ | ✅ `nexra daemon` long-poll bridge |
-| **Studio (image/video/music/site/PPT)** | ✗ | ✅ Built-in, per-call billing |
-| **Plugin marketplace** | ✗ | ✅ 70/30 split |
-| **Server** | Yours | **Yours** (your data, your control) |
+| **Marketplace to sell what you build** | ✗ | ✅ 70/30 split, real paying buyers |
+| **Plugs into Claude Code / Cursor** | n/a | ✅ `nexra mcp` |
 
 ---
 
@@ -174,10 +217,13 @@ Telegram bot ─→ NeXra server ─→ LLM picks a tool
 
 ---
 
-## 📦 22 built-in tools (and growing)
+## 📦 Built-in capabilities
 
-### 🎨 Studio (creative)
+NeXra's platform ships with **50+ native AI capabilities** today (Studio + Shop + Marketing + Marketplace + Logistics + Reconciliation). The CLI currently exposes **22 of them via MCP / chat** — the rest live behind the Web Console + Telegram bot and roll into the CLI release by release.
+
+### 🎨 Studio (creative — native generation, no external API)
 - **`studio_generate_image`** — image generation (Qwen / SDXL / Seedance), aspect ratio + preset
+- *(Exposed via Web/Telegram, CLI coming next release: music · video · MV · short-drama · novel · website · PPT · voice · digital-human · photo-AI · image-to-video · web-intro video)*
 
 ### 🛒 Shop (operations)
 - **`shop_list_products`** / **`shop_get_product`** — browse/inspect inventory
@@ -186,14 +232,20 @@ Telegram bot ─→ NeXra server ─→ LLM picks a tool
 - **`search_products`** / **`trending_products`** — keyword + best-seller search
 - **`lookup_order`** / **`cancel_order`** — order ops
 - **`my_cart`** / **`add_to_cart`** — cart manipulation
+- *(Platform also has: AutoCount POS sync · purchase orders · stock-take · daigou (group-buy) · distributors · F&B vertical · property vertical — exposed in Web Console)*
 
 ### 📣 Marketing & content
 - **`generate_marketing_copy`** — FB / Email / WhatsApp copywriting per product
+- *(Platform also has: FB Ads automation + Bayesian A/B · Custom Audience · Blog Autopilot · SMM traffic services · AI bank-statement reconciliation — exposed in Web Console)*
 
-### 🔌 Plugin marketplace
+### 🌍 Marketplace & logistics (platform — coming to CLI)
+- Shopee + TikTok Shop adapters (cross-border listing sync)
+- Skynet + EasyParcel logistics (account routing + 20% net-profit split)
+
+### 🔌 Plugin marketplace — *the Taobao for agent skills*
 - **`generate_plugin_code`** — AI writes a plugin spec from natural language
 - **`list_marketplace_plugins`** / **`install_marketplace_plugin`** / **`uninstall_plugin`** / **`upgrade_installed_plugin`**
-- **`publish_new_plugin_version`** — author flow
+- **`publish_new_plugin_version`** — author flow (**70% revenue share**)
 - **`test_plugin`** — sandbox-test before publishing
 
 ### 👤 Account
@@ -202,7 +254,7 @@ Telegram bot ─→ NeXra server ─→ LLM picks a tool
 ### 💻 System (CLI-only — runs on your machine)
 - **`fs_read`** / **`fs_write`** / **`bash_exec`** / **`http_fetch`**
 
-**Adding tools** — server-side registry, no CLI re-release needed. New tool ships → next `nexra chat` already sees it.
+**Server-driven tool registry** — when a new capability ships server-side, the next `nexra chat` already sees it. No CLI re-release needed.
 
 ---
 
