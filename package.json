@@ -1,6 +1,6 @@
 {
   "name": "@nexra-ai/agent-cli",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "description": "NeXra Agent — One agent, a whole closet of SaaS inside. Generates songs, MVs, websites, short dramas, novels, marketing reels, product photos. Auto-lists to Shopee/TikTok, runs FB ads, reconciles bank statements, ships logistics — 50+ AI capabilities native, no external API to wire up. Talk to it in terminal / Telegram / WhatsApp / WeChat / Facebook / Web / Claude Code (MCP).",
   "type": "module",
   "bin": {

@@ -2,7 +2,7 @@
 import { homedir } from "node:os";
 import { join } from "node:path";
 
-export const VERSION = "0.5.6";
+export const VERSION = "0.5.7";
 
 // 平台 API base URL。可通过 NEXRA_API_URL 覆盖（本地开发用 http://localhost:20009）
 export const API_BASE =

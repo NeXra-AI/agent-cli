@@ -8,8 +8,10 @@
 // This is what gives NeXra Agent its "Claude Code for e-commerce" feel —
 // it lives on your server, with your files, running your commands.
 import { execFile, spawn } from "node:child_process";
-import { readFileSync, writeFileSync, mkdirSync, statSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, statSync, existsSync, createWriteStream } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { pipeline } from "node:stream/promises";
+import { Readable } from "node:stream";
 
 const MAX_FS_BYTES_DEFAULT = 200_000;
 const MAX_HTTP_BYTES = 200_000;
@@ -22,6 +24,8 @@ export async function runLocalTool(name: string, args: any): Promise<any> {
       return fsRead(args);
     case "fs_write":
       return fsWrite(args);
+    case "fs_download":
+      return fsDownload(args);
     case "bash_exec":
       return bashExec(args);
     case "http_fetch":
@@ -118,6 +122,69 @@ function bashExec(args: { command: string; cwd?: string; timeout_seconds?: numbe
       res({ error: err.message });
     });
   });
+}
+
+// === fs_download ==============================================================
+// 把 URL 内容下载到本地文件 (binary-safe, 流式写入). 给 agent 一步从 server 缓存 /
+// Telegram 附件 / 公网 URL 拉文件到用户 Mac. 比 http_fetch + fs_write 二步组合
+// 简单、不丢字节、可处理大文件.
+async function fsDownload(args: {
+  url: string;
+  local_path: string;
+  headers?: Record<string, string>;
+  max_bytes?: number;
+}): Promise<any> {
+  if (!args.url) return { error: "url required" };
+  if (!args.local_path) return { error: "local_path required" };
+  const abs = resolve(process.cwd(), args.local_path.replace(/^~/, process.env.HOME || ""));
+  const MAX = Math.min(args.max_bytes ?? 200_000_000, 1_000_000_000); // 200MB default, 1GB cap
+
+  try {
+    mkdirSync(dirname(abs), { recursive: true });
+    const r = await fetch(args.url, {
+      method: "GET",
+      headers: args.headers,
+    });
+    if (!r.ok) {
+      return { error: `HTTP ${r.status}: ${(await r.text()).slice(0, 200)}` };
+    }
+    if (!r.body) return { error: "empty body" };
+
+    // Stream to disk so we don't blow memory on big files
+    const fileStream = createWriteStream(abs);
+    let written = 0;
+    const reader = (r.body as any).getReader
+      ? (r.body as any).getReader()
+      : null;
+    if (reader) {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        written += value.length;
+        if (written > MAX) {
+          fileStream.close();
+          return { error: `file exceeds max_bytes (${MAX})` };
+        }
+        fileStream.write(value);
+      }
+      fileStream.end();
+    } else {
+      // Fallback: Node Readable
+      await pipeline(Readable.from(r.body as any), fileStream);
+      written = statSync(abs).size;
+    }
+
+    const st = statSync(abs);
+    const contentType = r.headers.get("content-type") || "";
+    return {
+      url: args.url,
+      local_path: abs,
+      bytes_written: st.size,
+      content_type: contentType,
+    };
+  } catch (e: any) {
+    return { error: e.message };
+  }
 }
 
 // === http_fetch ===============================================================
